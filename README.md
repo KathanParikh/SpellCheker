@@ -134,8 +134,10 @@ ifstream file("dictionary.txt");  // Change filename here
 
 ## License
 
-Free to use and modify.
+MIT License - see [LICENSE](LICENSE) file for details
+
+Copyright (c) 2025 Kathan Parikh
 
 ## Author
 
-Created as a spell checking utility project.
+Created by Kathan Parikh
