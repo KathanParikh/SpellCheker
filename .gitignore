@@ -1,0 +1,33 @@
+# Compiled executables
+*.exe
+*.out
+*.app
+*.o
+*.obj
+
+# Output files
+output.txt
+corrected_output.txt
+
+# Temporary test files
+document.txt
+temp_*.txt
+
+# IDE and Editor files
+.vscode/
+.vs/
+*.swp
+*.swo
+*~
+
+# Windows
+Thumbs.db
+Desktop.ini
+
+# macOS
+.DS_Store
+
+# Build directories
+build/
+bin/
+obj/

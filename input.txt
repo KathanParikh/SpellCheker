@@ -1,0 +1,1 @@
+This is a sample text with some spelling mistakes. The spell checker program should detect these errors and suggest corrections. We can tst the algorithm with this sentence to see how well it performs.

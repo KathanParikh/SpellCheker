@@ -166,6 +166,7 @@ private:
         ifstream file("dictionary_111.txt");
         if (!file) {
             cerr << "Error: Cannot open dictionary_111.txt" << endl;
+            cerr << "Please ensure dictionary_111.txt exists with one word per line." << endl;
             exit(1);
         }
 
@@ -180,6 +181,10 @@ private:
             }
         }
         file.close();
+        
+        if (word_set.empty()) {
+            cerr << "Warning: Dictionary is empty!" << endl;
+        }
     }
 
 public:
@@ -231,6 +236,23 @@ public:
         file.close();
 
         parseText();
+    }
+
+    void processText(const string& text) {
+        original_text = text;
+        parseText();
+    }
+
+    void processStdin() {
+        string line;
+        while (getline(cin, line)) {
+            original_text += line + "\n";
+        }
+        parseText();
+    }
+
+    bool hasWords() const {
+        return !words.empty();
     }
 
 private:
@@ -330,6 +352,14 @@ public:
     }
 
 private:
+    string output_filename = "input.txt";
+
+public:
+    void setOutputFilename(const string& filename) {
+        output_filename = filename;
+    }
+
+private:
     void saveWithReplacements(const unordered_map<string, string>& replacements) {
         string result = original_text;
         int offset = 0;
@@ -343,20 +373,55 @@ private:
             }
         }
 
-        ofstream outFile("input.txt");
+        ofstream outFile(output_filename);
         if (outFile) {
             outFile << result;
             outFile.close();
-            cout << "\nCorrected text saved to input.txt (original file overwritten)" << endl;
+            cout << "\nCorrected text saved to " << output_filename << endl;
         } else {
-            cout << "\nError: Could not save to input.txt" << endl;
+            cout << "\nError: Could not save to " << output_filename << endl;
         }
     }
 };
 
-int main() {
+void printUsage() {
+    cout << "\nSpell Checker - Usage\n";
+    cout << "=====================\n\n";
+    cout << "Usage Options:\n";
+    cout << "  1. Default mode (reads input.txt):\n";
+    cout << "     ./spellchecker\n\n";
+    cout << "  2. Custom file:\n";
+    cout << "     ./spellchecker <filename>\n";
+    cout << "     Example: ./spellchecker document.txt\n\n";
+    cout << "  3. Help:\n";
+    cout << "     ./spellchecker --help\n\n";
+}
+
+int main(int argc, char* argv[]) {
     TextProcessor processor;
-    processor.processFile("input.txt");
+    
+    // Help option
+    if (argc > 1 && (string(argv[1]) == "--help" || string(argv[1]) == "-h")) {
+        printUsage();
+        return 0;
+    }
+    
+    // Custom file mode
+    if (argc > 1) {
+        string filename = argv[1];
+        processor.processFile(filename);
+        processor.setOutputFilename(filename);
+    }
+    // Default mode
+    else {
+        processor.processFile("input.txt");
+    }
+    
+    if (!processor.hasWords()) {
+        cerr << "No text to process!" << endl;
+        return 1;
+    }
+    
     processor.displayWithHighlights();
     processor.interactiveFix();
 
